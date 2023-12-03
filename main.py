@@ -26,8 +26,8 @@ def get_images(path_name, types):
     for o in types:
         dest = (path / o)
         dest.mkdir(exist_ok=True)
-        results = search_images_bing(azure_key, f'{o} {path_name}s')
-        download_images(dest, urls=results.attrgot('contentUrl'))
+        results = search_images_bing(azure_key, f'{o} {path_name}')
+        download_images(dest, urls=results.attrgot('contentUrl'), max_pics=240,)
 
     fns = get_image_files(path)
     print(fns)
@@ -57,6 +57,8 @@ def train_model(path):
     learn = vision_learner(dls, resnet18, metrics=error_rate)
     learn.fine_tune(4)
 
+    learn.export()
+
     return learn
 
 
@@ -69,17 +71,24 @@ def examine_model(model):
 
     interp.plot_top_losses(5, nrows=1)
 
-    cleaner = ImageClassifierCleaner(model)
-    cleaner
-    #
-    # for idx in cleaner.delete(): cleaner.fns[idx].unlink()
-    # for idx, cat in cleaner.change(): shutil.move(str(cleaner.fns[idx]), path / cat)
+def predict_image(img):
+    # load the model
+    learn_inf = load_learner('export.pkl')
+
+    # predict the image
+    pred,pred_idx,probs = learn_inf.predict(img)
+
+    # show the image
+    img.show()
+
+    # print the prediction
+    print(f'Prediction: {pred}; Probability: {probs[pred_idx]:.04f}')
 
 
 
 def main():
-    # mushroom_types = 'jack o\' lantern', 'chanterelle'
-    # get_images('images/mushroom', mushroom_types)
+    # mushroom_types = ['Omphalotus olearius']
+    # get_images('images', mushroom_types)
     model = train_model('images')
     examine_model(model)
 
