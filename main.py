@@ -76,6 +76,8 @@ def predict_image(img):
     learn_inf = load_learner('export.pkl')
 
     # predict the image
+    #image from path
+    img = PILImage.create(img)
     pred,pred_idx,probs = learn_inf.predict(img)
 
     # show the image
@@ -89,8 +91,11 @@ def predict_image(img):
 def main():
     # mushroom_types = ['Omphalotus olearius']
     # get_images('images', mushroom_types)
-    model = train_model('images')
-    examine_model(model)
+    # model = train_model('images')
+    # examine_model(model)
+
+    predict_image('images/chanterelle.jpg')
+    predict_image('images/jol.jpg')
 
 
 if __name__ == "__main__":
