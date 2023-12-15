@@ -67,35 +67,37 @@ def examine_model(model):
     interp = ClassificationInterpretation.from_learner(model)
     interp.plot_confusion_matrix()
 
-    time.sleep(10)
 
     interp.plot_top_losses(5, nrows=1)
 
+    time.sleep(10)
+
+
 def predict_image(img):
-    # load the model
     learn_inf = load_learner('export.pkl')
 
-    # predict the image
-    #image from path
     img = PILImage.create(img)
     pred,pred_idx,probs = learn_inf.predict(img)
 
-    # show the image
     img.show()
 
-    # print the prediction
-    print(f'Prediction: {pred}; Probability: {probs[pred_idx]:.04f}')
+    print(f'Prediction: {pred}; Probability: {probs[pred_idx]*100:.04f}%')
 
 
 
 def main():
-    # mushroom_types = ['Omphalotus olearius']
+    # mushroom_types = ['Sutorius eximius']
     # get_images('images', mushroom_types)
+    # remove_png_files('images/chanterelle')
+    # remove_png_files('images/jack o\' lantern')
     # model = train_model('images')
     # examine_model(model)
 
-    predict_image('images/chanterelle.jpg')
-    predict_image('images/jol.jpg')
+    predict_image('chanterelle.jpg')
+    predict_image('jol.jpg')
+    predict_image('kingb.jpeg')
+    predict_image('ShiitakeMushroomsHeader.jpg')
+    predict_image('nameko.png')
 
 
 if __name__ == "__main__":
